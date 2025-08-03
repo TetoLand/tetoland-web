@@ -1,86 +1,654 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TETOLAND Minecraft Server</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="icon" href="/favicon.ico">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <style>
-    body { margin: 0; padding: 0; font-family: 'Press Start 2P', cursive, Arial, sans-serif; background: url('https://www.transparenttextures.com/patterns/pixel-weave.png'), linear-gradient(135deg, #1e293b 0%, #3b82f6 100%); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
-    .navbar { width: 100vw; background: #0f172ad9; display: flex; justify-content: center; gap: 2rem; padding: 1rem 0 0.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.20); border-bottom: 4px solid #22d3ee; backdrop-filter: blur(4px); }
-    .navbar a { color: #38bdf8; text-decoration: none; font-size: 1rem; transition: color 0.2s; padding: 0.2rem 0.7rem 0.2rem 0.7rem; border-radius: 8px 8px 0 0; position: relative; display: inline-block; }
-    .navbar a .fa { margin-right: 0.4em; }
-    .navbar a::after { content: ''; display: block; height: 3px; width: 0; background: linear-gradient(90deg, #22d3ee, #fbbf24); border-radius: 2px; transition: width 0.3s cubic-bezier(.4,2,.6,1); position: absolute; left: 0; bottom: -6px; }
-    .navbar a:hover::after, .navbar a.active::after { width: 100%; }
-    .navbar a:hover, .navbar a.active { color: #fbbf24; background: #334155; }
-    .logo { display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; margin-top: 1.2rem; gap: 0.7rem; }
-    .logo .fa-cube { color: #22d3ee; font-size: 2.2rem; filter: drop-shadow(2px 2px 0 #0f172a); animation: bounce 1.5s infinite alternate; }
-    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
-    .logo-text { font-size: 1.5rem; color: #22d3ee; text-shadow: 2px 2px 0 #0f172a; letter-spacing: 2px; }
-    .main-content { flex: 1; width: 100%; display: flex; flex-direction: column; align-items: center; }
-    .container { background: rgba(30, 41, 59, 0.97); border: 4px solid #22d3ee; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.25); padding: 2rem 2.5rem 2.5rem 2.5rem; max-width: 700px; width: 95vw; text-align: center; margin: 1.2rem 0 2rem 0; animation: popin 0.7s cubic-bezier(.4,2,.6,1); display: flex; flex-direction: column; align-items: center; }
-    @keyframes popin { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    .subtitle { font-size: 1.1rem; margin-bottom: 1.5rem; color: #fbbf24; text-shadow: 1px 1px 0 #0f172a; }
-    .server-info { background: #0ea5e9; color: #fff; border-radius: 12px; padding: 0.7rem 1rem; margin-bottom: 1.5rem; font-size: 1.1rem; font-family: monospace; box-shadow: 0 2px 8px rgba(0,0,0,0.10); display: inline-block; border: 2px solid #fbbf24; animation: glow 2s infinite alternate; }
-    @keyframes glow { 0% { box-shadow: 0 0 8px #fbbf24; } 100% { box-shadow: 0 0 16px #22d3ee; } }
-    .features-section { width: 100%; margin-bottom: 2rem; }
-    .features-title { font-size: 1.1rem; color: #38bdf8; margin-bottom: 1.2rem; text-shadow: 1px 1px 0 #0f172a; }
-    .features-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; width: 100%; margin: 0 auto; padding: 0; list-style: none; }
-    .features-list li { background: #334155; padding: 1.2rem 1rem; border-radius: 12px; color: #f1f5f9; font-size: 1.05rem; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-left: 4px solid #22d3ee; transition: background 0.2s, border-color 0.2s, transform 0.2s; display: flex; flex-direction: column; align-items: flex-start; min-height: 120px; position: relative; }
-    .features-list li:hover { background: #22d3ee; color: #fff; border-color: #fbbf24; transform: translateY(-4px) scale(1.03); z-index: 2; }
-    .features-list b { color: #38bdf8; font-size: 1.1rem; margin-bottom: 0.5rem; display: block; }
-    .features-list .fa { font-size: 1.5rem; margin-bottom: 0.5rem; color: #fbbf24; }
-    .features-list li .desc { font-size: 0.98rem; color: #f1f5f9; }
-    .discord-link { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; text-decoration: none; color: #5865F2; font-size: 1.1rem; font-weight: bold; transition: color 0.2s; background: #23272a; border-radius: 8px; padding: 0.5rem 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.10); border: 2px solid #5865F2; animation: popin 0.7s 0.2s cubic-bezier(.4,2,.6,1); }
-    .discord-link:hover { color: #fff; background: #5865F2; border-color: #fbbf24; }
-    .fa-discord { color: #5865F2; font-size: 1.7rem; }
-    @media (max-width: 900px) { .container { padding: 1.2rem 0.5rem 1.5rem 0.5rem; } .features-list { grid-template-columns: 1fr; } }
-    @media (max-width: 600px) { .container { padding: 0.7rem 0.2rem 1rem 0.2rem; } .logo-text { font-size: 1.1rem; } h1 { font-size: 1.1rem; } .navbar { gap: 0.7rem; font-size: 0.9rem; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TetoLand - Premium Minecraft Server</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4ade80;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #4ade80;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="10" height="10" fill="%23065f46" x="0" y="0"/><rect width="10" height="10" fill="%23047857" x="10" y="0"/><rect width="10" height="10" fill="%23065f46" x="20" y="0"/></svg>') repeat;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+            to { text-shadow: 2px 2px 20px rgba(74, 222, 128, 0.5); }
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .server-info {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #4ade80;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.2);
+        }
+
+        .server-address {
+            font-size: 2rem;
+            color: #4ade80;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(74, 222, 128, 0.4);
+        }
+
+        .btn-discord {
+            background: linear-gradient(45deg, #5865f2, #4752c4);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-discord:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 0;
+            scroll-margin-top: 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: #4ade80;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+        }
+
+        /* Game Modes */
+        .game-modes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: #4ade80;
+            box-shadow: 0 15px 35px rgba(74, 222, 128, 0.2);
+        }
+
+        .game-icon {
+            font-size: 2.5rem;
+            color: #4ade80;
+            margin-bottom: 1rem;
+        }
+
+        .game-card h3 {
+            color: #4ade80;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Features */
+        .features {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #4ade80;
+            margin-bottom: 1rem;
+        }
+
+        /* Ranks */
+        .ranks-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .rank-card {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.1));
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            transition: all 0.3s;
+        }
+
+        .rank-card:hover {
+            border-color: #4ade80;
+            transform: scale(1.05);
+        }
+
+        .rank-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .rank-vip { color: #fbbf24; }
+        .rank-premium { color: #8b5cf6; }
+        .rank-elite { color: #ef4444; }
+        .rank-legend { color: #f97316; }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 2px solid #4ade80;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            
+            .server-address {
+                font-size: 1.5rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Status indicator */
+        .status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+    </style>
 </head>
 <body>
-  <nav class="navbar">
-    <a href="index.html" class="active"><i class="fa fa-home"></i>Home</a>
-    <a href="about.html"><i class="fa fa-info-circle"></i>About</a>
-    <a href="games.html"><i class="fa fa-gamepad"></i>Games</a>
-    <a href="join.html"><i class="fa fa-sign-in-alt"></i>Join</a>
-    <a href="contact.html"><i class="fa fa-envelope"></i>Contact</a>
-  </nav>
-  <div class="logo">
-    <i class="fa fa-cube"></i>
-    <span class="logo-text">TETOLAND</span>
-  </div>
-  <div class="main-content">
-    <div class="container">
-      <div class="subtitle">Minecraft Server Network</div>
-      <div class="server-info">Game Domain: <b>mc.tetoland.org</b></div>
-      <div class="features-section">
-        <div class="features-title">Cool Stuff &amp; Games:</div>
-        <ul class="features-list">
-          <li><i class="fa fa-fire"></i><b>Skywars</b><span class="desc">Battle in the sky on floating islands. Last player standing wins!</span></li>
-          <li><i class="fa fa-bridge-water"></i><b>Bridge</b><span class="desc">Fast-paced PvP where you race to score points by crossing the bridge.</span></li>
-          <li><i class="fa fa-tree"></i><b>Survival</b><span class="desc">Classic Minecraft survival with a friendly community and custom features.</span></li>
-          <li><i class="fa fa-shoe-prints"></i><b>Parkour</b><span class="desc">Test your jumping skills on challenging parkour maps.</span></li>
-          <li><i class="fa fa-star"></i><b>And more!</b><span class="desc">We regularly add new games and events. Join our Discord to stay updated!</span></li>
-        </ul>
-      </div>
-      <a class="discord-link" href="https://discord.gg/tetopia" target="_blank" rel="noopener">
-        <i class="fab fa-discord"></i> Join our Discord!
-      </a>
-    </div>
-  </div>
-  <script>
-    // Highlight active nav link
-    const navLinks = document.querySelectorAll('.navbar a');
-    navLinks.forEach(link => {
-      if (window.location.pathname.endsWith(link.getAttribute('href'))) {
-        link.classList.add('active');
-      }
-    });
-  </script>
+    <header>
+        <nav class="container">
+            <div class="logo">TetoLand</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#games">Games</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#ranks">Ranks</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Welcome to TetoLand</h1>
+                    <p>The Ultimate Minecraft Server Experience</p>
+                    
+                    <div class="server-info">
+                        <div class="server-address">
+                            <span class="status"></span>mc.tetoland.org
+                        </div>
+                        <p>Join thousands of players in our amazing community!</p>
+                    </div>
+
+                    <div class="cta-buttons">
+                        <a href="#" class="btn btn-primary" onclick="copyServerIP()">Copy Server IP</a>
+                        <a href="https://discord.gg/tetopia" target="_blank" class="btn btn-discord">
+                            <i class="fab fa-discord"></i> Discord
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="games" class="container">
+            <h2 class="section-title fade-in">Game Modes</h2>
+            <div class="game-modes">
+                <div class="game-card fade-in">
+                    <div class="game-icon"><i class="fas fa-globe-americas"></i></div>
+                    <h3>Survival</h3>
+                    <p>Experience the classic Minecraft survival gameplay with our custom features, economy system, and protected land claims.</p>
+                </div>
+                <div class="game-card fade-in">
+                    <div class="game-icon"><i class="fas fa-cloud"></i></div>
+                    <h3>SkyWars</h3>
+                    <p>Battle it out in the sky! Fight other players on floating islands and be the last one standing in this intense PvP game mode.</p>
+                </div>
+                <div class="game-card fade-in">
+                    <div class="game-icon"><i class="fas fa-bridge"></i></div>
+                    <h3>The Bridge</h3>
+                    <p>Strategic team-based combat where you must build bridges to reach enemy bases while defending your own nexus.</p>
+                </div>
+                <div class="game-card fade-in">
+                    <div class="game-icon"><i class="fas fa-gamepad"></i></div>
+                    <h3>More Games</h3>
+                    <p>Discover additional game modes including mini-games, creative plots, and special event games that rotate regularly!</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title fade-in">Why Choose TetoLand?</h2>
+                <div class="features-grid">
+                    <div class="feature-item fade-in">
+                        <div class="feature-icon"><i class="fa-solid fa-calendar"></i></div>
+                        <h3>Regular Events</h3>
+                        <p>Join our exciting server-wide events with amazing prizes and rewards!</p>
+                    </div>
+                    <div class="feature-item fade-in">
+                        <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+                        <h3>Ranking System</h3>
+                        <p>Progress through our comprehensive ranking system and unlock exclusive perks!</p>
+                    </div>
+                    <div class="feature-item fade-in">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Anti-Grief Protection</h3>
+                        <p>Your builds are safe with our advanced protection and moderation systems.</p>
+                    </div>
+                    <div class="feature-item fade-in">
+                        <div class="feature-icon"><i class="fas fa-coins"></i></div>
+                        <h3>Economy System</h3>
+                        <p>Trade, buy, and sell with other players in our balanced economy system.</p>
+                    </div>
+                    <div class="feature-item fade-in">
+                        <div class="feature-icon"><i class="fas fa-users"></i></div>
+                        <h3>Active Community</h3>
+                        <p>Join our friendly community on Discord and make new friends!</p>
+                    </div>
+                    <div class="feature-item fade-in">
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                        <h3>24/7 Uptime</h3>
+                        <p>Our servers run 24/7 with minimal downtime and excellent performance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ranks" class="container">
+            <h2 class="section-title fade-in">Server Ranks</h2>
+            <div class="ranks-container">
+                <div class="rank-card fade-in">
+                    <div class="rank-name">Member</div>
+                    <p>Default rank for all players</p>
+                    <p>• Basic commands</p>
+                    <p>• Chat access</p>
+                </div>
+                <div class="rank-card fade-in">
+                    <div class="rank-name rank-vip">VIP</div>
+                    <p>Support the server and get perks!</p>
+                    <p>• Colored chat</p>
+                    <p>• Extra homes</p>
+                    
+                </div>
+                <div class="rank-card fade-in">
+                    <div class="rank-name rank-premium">Premium</div>
+                    <p>Enhanced gameplay experience</p>
+                    <p>• All VIP perks</p>
+                    <p>• Flying in lobby</p>
+                    <p>• Exclusive areas</p>
+                </div>
+                <div class="rank-card fade-in">
+                    <div class="rank-name rank-elite">Elite</div>
+                    <p>Elite player status</p>
+                    <p>• All Premium perks</p>
+                    <p>• Elite commands</p>
+                    <p>• Priority support</p>
+                </div>
+                <div class="rank-card fade-in">
+                    <div class="rank-name rank-legend">Legend</div>
+                    <p>The ultimate rank!</p>
+                    <p>• All Elite perks</p>
+                    <p>• Legend Tag</p>
+                    <p>• Special privileges</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="community" class="container">
+            <h2 class="section-title fade-in">Join Our Community</h2>
+            <div class="server-info fade-in">
+                <h3>Connect With Us</h3>
+                <p>Stay updated with the latest news, events, and connect with other players!</p>
+                <div class="cta-buttons" style="margin-top: 2rem;">
+                    <a href="https://discord.gg/tetopia" target="_blank" class="btn btn-discord" title="discord.gg/tetopia">
+                        <i class="fab fa-discord"></i> Join Discord
+                    </a>
+                    <a href="#" class="btn btn-primary" onclick="copyServerIP()">
+                        <i class="fas fa-server"></i> Copy Server IP
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 TetoLand Minecraft Server. All rights reserved.</p>
+            <p>Website: <strong>tetoland.org</strong> | Server: <strong>mc.tetoland.org</strong> | Discord: <strong>discord.gg/tetopia</strong></p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Copy server IP functionality
+        function copyServerIP() {
+            const serverIP = 'mc.tetoland.org';
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(serverIP).then(() => {
+                    showNotification('Server IP copied to clipboard!');
+                }).catch(() => {
+                    showNotification('Failed to copy IP. Server IP: mc.tetoland.org');
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = serverIP;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showNotification('Server IP copied to clipboard!');
+                } catch (err) {
+                    showNotification('Failed to copy IP. Server IP: mc.tetoland.org');
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(45deg, #4ade80, #22c55e);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 10000;
+                box-shadow: 0 10px 25px rgba(74, 222, 128, 0.4);
+                font-weight: bold;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            // Add animation keyframes
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with fade-in class
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Add some interactive particles (optional visual enhancement)
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: #4ade80;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: -1;
+                opacity: 0.6;
+                animation: float 6s linear infinite;
+            `;
+            
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                if (document.body.contains(particle)) {
+                    document.body.removeChild(particle);
+                }
+            }, 6000);
+        }
+
+        // Add particle animation styles
+        if (!document.querySelector('#particle-styles')) {
+            const style = document.createElement('style');
+            style.id = 'particle-styles';
+            style.textContent = `
+                @keyframes float {
+                    to {
+                        transform: translateY(-100vh) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 3000);
+    </script>
 </body>
-</html> 
+</html>
